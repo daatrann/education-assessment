@@ -85,35 +85,6 @@ The application is available at:
 http://localhost:3000
 ```
 
-#### 3. Interact with the database
-
-First, open an interactive shell session inside the MySQL container
-
-```
-docker exec -it mysql_nest sh
-```
-
-To access MySQL's shell, use the credentials and port listed in `.env`
-
-```
-mysql -h 127.0.0.1 -P 3306 -u root -proot education_db
-```
-
-Once in the shell, you can query the database (default db name is 'education')
-
-```
-show tables;
-select * from students;
-```
-
-#### 4. Delete the containers
-
-Delete the containers and clean out the volume by running
-
-```
-docker-compose down -v
-```
-
 ### Run Unit Tests
 
 Similarly, open another interactive shell session inside the api server container and execute the test runner
