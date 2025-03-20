@@ -1,0 +1,56 @@
+// schema.prisma
+
+// Define the database provider
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Teacher {
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  students      Student[]      @relation("Registration")
+  notifications Notification[]
+  Registration Registration[]
+}
+
+model Student {
+  id            Int                   @id @default(autoincrement())
+  email         String                @unique
+  isSuspended   Boolean               @default(false)
+  teachers      Teacher[]             @relation("Registration")
+  notifications NotificationMention[]
+  Registration Registration[]
+}
+
+model Registration {
+  id        Int     @id @default(autoincrement())
+  teacherId Int
+  studentId Int
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  student   Student @relation(fields: [studentId], references: [id])
+
+  @@unique([teacherId, studentId])
+}
+
+model Notification {
+  id               Int                   @id @default(autoincrement())
+  teacherId        Int
+  notificationText String
+  teacher          Teacher               @relation(fields: [teacherId], references: [id])
+  mentions         NotificationMention[]
+}
+
+model NotificationMention {
+  id             Int          @id @default(autoincrement())
+  notificationId Int
+  studentId      Int
+  notification   Notification @relation(fields: [notificationId], references: [id])
+  student        Student      @relation(fields: [studentId], references: [id])
+
+  @@unique([notificationId, studentId])
+}
